@@ -3,3 +3,6 @@ AButton 1.0 Button.qml
 ATextInput 1.0 TextField.qml
 ALoading 1.0 Loading.qml
 AIconPlaneButton 1.0 iconPlaneButton.qml
+ATabButton 1.0 TabButton.qml
+ASelectionCombo 1.0 SelectionCombo.qml
+AComboSelectedItem 1.0 ComboSelectedItem.qml
