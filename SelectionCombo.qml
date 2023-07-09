@@ -1,8 +1,9 @@
 import QtQuick 2.12
+import QtQuick.Controls 2.14
 
 Item {
     FontLoader { id: robotoFont; source: "../Resources/Fonts/Roboto/Roboto-Regular.ttf"}
-    id: containedButton
+    id: superparent
     height: 60
     width:  200
     property bool outlined: false 
@@ -11,8 +12,13 @@ Item {
     property string textColor: outlined ? backgroundColor : "white"
     property string icon: ""
     property string iconColor: textColor
+    property var model: ListModel {
+            ListElement { name: "Element 1"}
+            ListElement { name: "Element 2"}
+            ListElement { name: "Element 3"}
+    }
 
-    signal clicked()
+    signal clicked(var name)
 
     Text
     {
@@ -100,16 +106,60 @@ Item {
     }
 
 
-    Rectangle
+    ScrollView
     {
         id: lista
-        height: 300
         width: rectangle.width
         anchors.top: rectangle.bottom
-        anchors.topMargin: 0
-        color: "lightgrey"
+        anchors.topMargin: 3
+        height: itemHeight * maxItemDisplayed
         visible: false
+        clip: true
+        
+        property int itemHeight : 35
+        property int maxItemDisplayed : 5
+        
+        Column
+        {
+            id: items
+            anchors.left: parent.left
+            anchors.leftMargin: 5
+            anchors.right: parent.right
+            anchors.rightMargin: 5
+
+            Repeater
+            {
+                id: repeater
+                model:  superparent.model
+                delegate: 
+                    Rectangle
+                    {
+                        id: item
+                        visible: true
+                        color: "lightgrey"
+                        width: lista.width
+                        height: lista.itemHeight
+
+                        required property string name
+
+                        Text
+                        {
+                            id: itemName
+                            text: name
+                            anchors.left: parent.left
+                            anchors.leftMargin: 5 
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onClicked: superparent.clicked(name)
+                            onEntered: item.color = "grey"
+                            onExited: item.color = "lightgrey"
+                        }
+                    }
+            }
+        }
     }
-
-
 }
