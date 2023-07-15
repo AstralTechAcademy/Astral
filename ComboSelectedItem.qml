@@ -2,15 +2,19 @@ import QtQuick 2.12
 
 Rectangle
 {
-    id: comboSelectedItem
+    id: superparent
     height: 20
     width: name.width + 30
     color: "grey"
 
+    property string itemName: "Any"
+
+    signal removed(var name)
+
     Text
     {
         id: name
-        text: "Any"
+        text: itemName
         anchors.left: parent.left
         anchors.leftMargin:3
         anchors.verticalCenter: parent.verticalCenter
@@ -28,7 +32,9 @@ Rectangle
 
         MouseArea {
             anchors.fill: parent
-            onClicked: console.log("Cross")
+            onClicked: {
+                superparent.removed(itemName)
+            }
         }
     }
 }

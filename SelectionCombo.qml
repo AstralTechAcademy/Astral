@@ -12,6 +12,8 @@ Item {
     property string textColor: outlined ? backgroundColor : "white"
     property string icon: ""
     property string iconColor: textColor
+    
+    // Default model as example
     property var model: ListModel {
             ListElement { name: "Element 1"}
             ListElement { name: "Element 2"}
@@ -64,45 +66,45 @@ Item {
             }
         }
 
-        Row
+        ScrollView
         {
-            id: itemsSelected
             anchors.verticalCenter: rectangle.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 5
             anchors.right: open.left
             anchors.rightMargin: 3
-
+            
             height:  20
             z:3
-            spacing: 3
             clip: true
 
-            AComboSelectedItem
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
+            ListModel
             {
-                id: comboItem
-                radius: 5
+                id: selectedItemModel
             }
 
-            AComboSelectedItem
+            Row
             {
-                id: comboItem2
-                radius: 5
-            }
+                id: itemsSelected
+                spacing: 3
 
+                Repeater
+                {
+                    model:  selectedItemModel
+                    delegate: AComboSelectedItem
+                        {
+                            id: comboItem
+                            radius: 5
+                            itemName: name
 
-            AComboSelectedItem
-            {
-                id: comboItem3
-                radius: 5
-            }
-
-            AComboSelectedItem
-            {
-                id: comboItem4
-                radius: 5
+                            onRemoved: name => console.log("Remove " + name)
+                        }
+                }
             }
         }
+
     }
 
 
@@ -154,7 +156,10 @@ Item {
                         MouseArea {
                             anchors.fill: parent
                             hoverEnabled: true
-                            onClicked: superparent.clicked(name)
+                            onClicked: {
+                                selectedItemModel.append({"name": name})
+                                superparent.clicked(name)
+                            }
                             onEntered: item.color = "grey"
                             onExited: item.color = "lightgrey"
                         }
