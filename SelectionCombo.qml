@@ -21,6 +21,7 @@ Item {
     }
 
     signal clicked(var name)
+    signal removed(var name)
 
     Text
     {
@@ -83,6 +84,10 @@ Item {
             ListModel
             {
                 id: selectedItemModel
+
+                function removed(name) {
+                    superparent.removed(name);
+                }
             }
 
             Row
@@ -99,7 +104,12 @@ Item {
                             radius: 5
                             itemName: name
 
-                            onRemoved: name => console.log("Remove " + name)
+                            onRemoved: function (name) {
+                                    for (var i = 0; i < selectedItemModel.count; i++)  {
+                                        if(selectedItemModel.get(i).name = name)
+                                            selectedItemModel.removed(name); selectedItemModel.remove(i); return;
+                                    }
+                            }
                         }
                 }
             }
